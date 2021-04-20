@@ -16,7 +16,8 @@ import { graphql } from "gatsby"
 import DocLayout from "../components/doclayout"
 import PageActions from "../components/PageActions"
 import SiteMenu from "../components/SiteMenu"
-import RenderQuizMdx from "../components/RenderQuizMdx"
+import { QuizQuestion } from "../components/QuizQuestion"
+import { RenderMdx } from "../components/RenderMdx"
 
 import { Flex, View } from "@adobe/react-spectrum"
 import {
@@ -30,7 +31,7 @@ const QuizTemplate = ({ data, location, pageContext }) => {
   const { siteMetadata } = site
   const { sourceFiles } = siteMetadata
   const { absolutePath, childMdx } = file
-  const { body, frontmatter, tableOfContents, timeToRead } = childMdx
+  const { body, tableOfContents, timeToRead } = childMdx
   const { contributors, gitRemote } = pageContext
   const pathToFiles = sourceFiles.endsWith("/")
     ? sourceFiles
@@ -88,8 +89,7 @@ const QuizTemplate = ({ data, location, pageContext }) => {
           ""
         )}
       </div>
-
-      <RenderQuizMdx children={body} />
+      <RenderMdx overrides={{ ul: QuizQuestion }}>{body}</RenderMdx>
 
       <Flex
         direction="column"
@@ -126,12 +126,6 @@ export const query = graphql`
         body
         tableOfContents(maxDepth: 3)
         timeToRead
-        frontmatter {
-          answers {
-            value
-            correct
-          }
-        }
       }
     }
     parliamentNavigation {
